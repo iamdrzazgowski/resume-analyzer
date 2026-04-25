@@ -8,71 +8,62 @@ load_dotenv()
 
 client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
-def analyze_resume(resume_text: str, job_description: str):
+def analyze_resume_groq(resume_text: str, job_description: str):
     """Wysyła CV i ogłoszenie do Groq API i zwraca analizę."""
 
     prompt = f"""
-    You are a senior HR recruiter with 10+ years of experience in tech recruitment. 
-    You evaluate candidates objectively and critically — you do NOT inflate scores. 
-    
-    CANDIDATE CV:
-    {resume_text}
-    
-    JOB POSTING:
-    {job_description}
-    
-    SCORING INSTRUCTIONS — follow exactly:
-    
-    Step 1 — Required skills audit (max 60 points):
-    Split the job requirements into "Must-have" (primary stack/years) and "Nice-to-have" (extra stardust).
-    - MUST-HAVE (Weight: 80% of Step 1): For each core technology (e.g., Python, React):
-        - Mentioned + concrete usage in named project = 100% points
-        - Mentioned in Tools/Skills section ONLY (no project evidence) = 25% points (CRITICAL: Be strict here, knowing a name is not proficiency)
-        - Missing = 0 points
-    - NICE-TO-HAVE (Weight: 20% of Step 1):
-        - Mentioned in CV = 100% points
-        - Missing = 0 points
-    
-    CRITICAL RULE: If a "Very strong proficiency" in a specific language (e.g., Python) is required and the candidate only lists it in "Other" or has NO projects in it, the MAXIMUM total score for Step 1 is capped at 20/60.
-    
-    Step 2 — Seniority & Experience penalty (max 20 points):
-    - Professional experience >= required years = 20
-    - Professional experience < required years but > 0 = 5 points (Candidate is a Junior applying for a Mid/Senior role)
-    - No professional experience (student/projects only) = 0 points
-    
-    Step 3 — Project & Stack Relevance (max 20 points):
-    - Projects use the EXACT main stack required (e.g., Python+React) = 20
-    - Projects use a similar but different stack (e.g., Node+React instead of Python+React) = 5
-    - Irrelevant projects = 0
-    
-    Step 4 — Final score:
-    Sum Step1 + Step2 + Step3. Do NOT round up. Be brutal. 
-    Final score must be a whole integer.
-    
-    Step 5 — Identify strengths:
-    List only skills present in BOTH CV (with project proof) and Job Posting.
-    
-    Step 6 — Identify gaps:
-    List missing "Must-haves" first. If the candidate uses a different backend/frontend language than required, mark it as a CRITICAL gap.
-    
-    Step 7 — Suggestions:
-    Focus on the stack gap. If they lack Python, suggest a specific Python-based project.
-    
-    Step 8 — Cover letter:
-    Strictly follow the "No fluff" rule. Do not use forbidden phrases. 
-    
-    Respond ONLY with raw JSON. Start with {{ and end with }}.
-    
+    You are a senior tech recruiter. Score the candidate objectively — no inflation, no deflation.
+
+    CV: {resume_text}
+    JOB POSTING: {job_description}
+
+    --- SCORING (total 100 pts) ---
+
+    [S1] Required skills — 60 pts
+    Identify must-haves and nice-to-haves from the job posting.
+
+    Must-haves (48 pts total, split equally per skill):
+      - Skill proven in a named project = full points
+      - Skill listed only in skills/tools section = 25% points
+      - Skill missing = 0
+
+    Nice-to-haves (12 pts total, split equally per skill):
+      - Mentioned anywhere in CV = full points
+      - Missing = 0
+
+    [S2] Experience level — 20 pts
+      - Commercial experience >= required = 20
+      - Some commercial experience (internship/freelance/part-time) = 12
+      - No commercial exp, but 3+ relevant projects = 8
+      - No commercial exp, 1-2 projects = 4
+      - No experience, no projects = 0
+
+    [S3] Project relevance — 20 pts
+      - Projects use exact required stack = 20
+      - Projects use similar stack (e.g. Node instead of Python) = 12
+      - Projects partially overlap = 6
+      - Irrelevant projects = 0
+
+    Final score = S1 + S2 + S3. Integer only.
+
+    --- OUTPUT RULES ---
+    - strengths: only hard skills proven in BOTH CV projects AND job posting
+    - gaps: only missing technical skills (NO soft skills like teamwork, communication)
+    - suggestions: one concrete project idea per gap (e.g. "Build a REST API in Python using FastAPI")
+    - cover_letter: 3 sentences, no fluff, first-person, specific to this job
+
+    Respond ONLY with raw JSON starting with {{ and ending with }}.
+
     {{
-      "score": <integer 0-100>,
+      "score": <int 0-100>,
       "score_breakdown": {{
-        "required_skills": <0-60>,
-        "experience_level": <0-20>,
-        "project_relevance": <0-20>
+        "required_skills": <int 0-60>,
+        "experience_level": <int 0-20>,
+        "project_relevance": <int 0-20>
       }},
-      "strengths": [...],
-      "gaps": [...],
-      "suggestions": [...],
+      "strengths": ["..."],
+      "gaps": ["..."],
+      "suggestions": ["..."],
       "cover_letter": "..."
     }}
     """
