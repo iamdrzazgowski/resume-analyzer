@@ -30,10 +30,9 @@ class ScoreBreakdown(BaseModel):
 class AnalysisResult(BaseModel):
     score: int = Field(ge=0, le=100)
     score_breakdown: ScoreBreakdown
-    cap_applied: bool
-    cap_reason: Optional[str] = None
-    scoring_notes: str
-    strengths: List[str] = Field(min_length=1)
-    gaps: List[str] = Field(min_length=1)
-    suggestions: List[str] = Field(min_length=1)
-    cover_letter: str = Field(min_length=50, max_length=600)
+    scoring_notes: Optional[str] = None
+    strengths: List[str] = []
+    # gaps: List[str] = Field(min_length=1)
+    gaps: List[str] = []
+    # suggestions: List[str] = Field(min_length=1)
+    suggestions: List[str] = []

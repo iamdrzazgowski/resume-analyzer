@@ -28,7 +28,7 @@ async def analyze(resume_file: UploadFile = File(...), job_description: str = Fo
         raise HTTPException(status_code=400, detail="Nie można odczytać pliku PDF")
 
     try:
-        result = analyze_resume_gemini(resume_text, job_description)
+        result = analyze_resume_groq(resume_text, job_description)
         result["score"] = int(round(result["score"]))
         return result
     except Exception as e:
