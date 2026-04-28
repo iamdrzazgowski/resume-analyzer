@@ -1,11 +1,9 @@
 import json
 import os
-import re
 import logging
 from google import genai
 from google.genai import types
 from dotenv import load_dotenv
-from models.schemas import AnalysisResult
 
 load_dotenv()
 
