@@ -2,7 +2,6 @@ import logging
 from fastapi import APIRouter, UploadFile, File, Form, HTTPException
 from models.schemas import AnalysisResult
 from services.gemini_service import analyze_resume_gemini
-from services.groq_service import analyze_resume_groq
 from services.pdf_parser import extract_text_from_pdf
 
 logger = logging.getLogger(__name__)
