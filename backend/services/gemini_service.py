@@ -32,18 +32,23 @@ def analyze_resume_gemini(resume_text: str, job_description: str):
       "bez doświadczenia", no minimum years → JUNIOR, otherwise SENIOR)
     - PRIMARY_STACK: main language/framework (listed first or with min. years).
       If multiple core techs are required together (e.g. React + Node.js),
-      treat them as ONE combined stack.
+      treat them as ONE combined stack. Each component is scored independently in Part A.
     - MUST_HAVE_TECHS: required technical skills from the REQUIREMENTS section only.
       Do NOT include language proficiency (e.g. "język angielski", "English").
+      IMPORTANT — OR logic: when the job posting lists alternatives with "or" / "lub" /
+      "jeden z" / "one of" (e.g. "React or Angular", "jeden z: React, Angular, Node.js"),
+      a candidate satisfying ANY ONE alternative fully satisfies that requirement.
+      Do NOT list the unsatisfied alternatives as gaps if another alternative is present in CV.
     - MUST_HAVE_PRACTICES: engineering practices from the section explicitly labeled
       as requirements (e.g. "Nasze wymagania", "Requirements", "We require") ONLY.
       NEGATIVE EXAMPLE: if "code review" appears ONLY under duties/responsibilities
       ("Obowiązki", "You will"), do NOT include it here. Same for "unit testing",
       "agile", etc. that appear only in the duties section.
     - NICE_TO_HAVES: optional/bonus technical skills
-    - PART_B_WEIGHT: if MUST_HAVE_PRACTICES list is empty, set PART_B_WEIGHT = 0
-      and add 12 to Part A total weight (Part A becomes 48 pts). Otherwise
-      PART_B_WEIGHT = 12 and Part A = 36 pts.
+    - PART_B_WEIGHT: if MUST_HAVE_PRACTICES list is empty, set PART_B_WEIGHT = 0.
+      Otherwise set PART_B_WEIGHT = 12.
+    - PART_A_WEIGHT: if PART_B_WEIGHT = 0 then PART_A_WEIGHT = 48, else PART_A_WEIGHT = 36.
+      NOTE: Part A + Part B + Part C must always equal 60. Verify before proceeding.
 
     --- STEP 1: CRITICAL RULE CHECK ---
     If PRIMARY_STACK technology has NO named project proof in CV:
@@ -61,10 +66,10 @@ def analyze_resume_gemini(resume_text: str, job_description: str):
 
     --- SCORING (total 100 pts) ---
 
-    [S1] Required skills — 60 pts (skip if cap applied above)
+    [S1] Required skills — 60 pts total (skip if cap applied above)
 
-    Part A — Technical must-haves (36 pts base, or 48 pts if PART_B_WEIGHT = 0):
-      Points divided equally per skill. Do NOT include language proficiency.
+    Part A — Technical must-haves (PART_A_WEIGHT pts, equally divided per skill):
+      Do NOT include language proficiency.
       - Proven in a named project = 100%
       - Listed in skills/tools section only AND the skill is a tool/utility
         by nature (e.g. Git, Docker, Postman, Linux, Vite, Vercel) = 75%
@@ -83,6 +88,9 @@ def analyze_resume_gemini(resume_text: str, job_description: str):
     Part C — Nice-to-haves (12 pts, equally divided per skill):
       - Mentioned anywhere in CV = 100%
       - Missing = 0%
+
+    Verify before continuing: PART_A_WEIGHT + PART_B_WEIGHT + 12 = 60.
+    If this does not equal 60, recheck STEP 0 before proceeding.
 
     [S2] Experience level — 26 pts
 
@@ -111,38 +119,62 @@ def analyze_resume_gemini(resume_text: str, job_description: str):
       Step 3: Count matching projects = N.
       - N >= 3 = 14 pts
       - N == 2 = 10 pts
-      - N == 1 = 7 pts   ← changed from original (was 10)
+      - N == 1 = 7 pts
       - N == 0, same paradigm different language = 7 pts
       - N == 0, partial overlap = 3 pts
       - N == 0, irrelevant = 0 pts
 
     --- FINAL CALCULATION ---
     Step 1: Write out S1 = X, S2 = Y, S3 = Z explicitly.
-    Step 2: Verify: X + Y + Z = Final Score.
-    Step 3: Check each value is within allowed range (S1: 0–60, S2: 0–26, S3: 0–14).
-    Final Score = S1 + S2 + S3. Must be integer. No rounding up.
+    Step 2: Verify X is within [0, 60], Y within [0, 26], Z within [0, 14].
+    Step 3: Verify X + Y + Z = Final Score.
+    Step 4: Final Score must be an integer. Round down if fractional. No rounding up.
 
     --- OUTPUT RULES ---
+    - Technology names in strengths, gaps, and suggestions are NEVER translated.
+      Always use canonical English names (e.g. "React.js", not "Reaguj").
     - strengths: hard technical skills present in BOTH CV and JD with proof.
       Exclude language proficiency and soft skills.
     - gaps: missing skills from MUST_HAVE_TECHS and MUST_HAVE_PRACTICES only.
       Do NOT include language proficiency, soft skills, or items from duties section.
+      Do NOT include alternatives already satisfied by OR logic (see MUST_HAVE_TECHS above).
       If no hard gaps exist, list missing NICE_TO_HAVES.
-    - suggestions: EXACTLY 5. Each must reference (1) specific technology,
-      (2) specific CV project, (3) what it proves.
-      Bridge Technique: "Since you know X, add Y to [Project] to prove Z."
-      Max 2 sentences each.
+      FORMAT: each gap must be a short canonical label of 1–4 words in English.
+      Never copy full sentences or descriptions from the job posting.
+      CORRECT: "AI Integration", "AI Assistants", "Motion", "Unit Testing"
+      INCORRECT: "Umiejętność korzystania z asystentów AI", "experience with AI tools",
+      "znajomość frameworka Angular"
+      If a skill is described in a full sentence in the JD, distill it to its core noun.
+    - suggestions: EXACTLY 5. Each suggestion must address a DIFFERENT gap from the gaps list.
+      Work through the gaps list in order — one suggestion per gap.
+      If gaps list has fewer than 5 items, address the highest-priority gaps again
+      from a different angle or referencing a different project.
+      Do NOT generate multiple suggestions for the same gap unless gaps list has fewer than 5 items.
+      Format each suggestion EXACTLY as:
+      "Since you have [existing skill] in [Project Name], add [missing skill]
+      to demonstrate [what it proves to recruiters]."
+      No other format is accepted. Maximum 2 sentences per suggestion.
     - scoring_notes: one sentence — flag cap, PART_B_WEIGHT redistribution,
       or any unusual decision. Otherwise empty string.
     - language: detect language of the JOB POSTING and respond in that language.
+      Exceptions — always in English regardless of detected language:
+      - technology names in strengths, gaps, suggestions
+      - scoring_notes field (always English)
+      - gap labels
 
     --- CHAIN OF THOUGHT ---
     First, write your full reasoning inside <reasoning>...</reasoning> tags.
-    Include: extracted fields from STEP 0, cap decision from STEP 1,
-    per-skill scoring for S1, S2 tier selection, project list and matching for S3,
-    and the final arithmetic check.
+    Include:
+      - Extracted fields from STEP 0 (JOB_LEVEL, PRIMARY_STACK, MUST_HAVE_TECHS,
+        MUST_HAVE_PRACTICES, NICE_TO_HAVES, PART_B_WEIGHT, PART_A_WEIGHT)
+      - Verification: PART_A_WEIGHT + PART_B_WEIGHT + 12 = 60
+      - Cap decision from STEP 1
+      - Per-skill scoring for Part A, Part B, Part C with intermediate arithmetic
+      - S1 total, S2 tier selection with justification, S3 project list and matching
+      - Final arithmetic check: S1 + S2 + S3 = Final Score
 
-    After </reasoning>, output ONLY the JSON below — no other text.
+    After </reasoning>, output ONLY the raw JSON object below.
+    No markdown fences, no ```json, no explanation, no whitespace before the opening brace.
 
     {{
       "score": 0,
