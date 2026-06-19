@@ -7,19 +7,18 @@ import { Textarea } from './ui/textarea';
 import { UploadIcon } from './ui/upload-icon';
 import { FormData } from '@/lib/types';
 import { useCallback, useState } from 'react';
-
-const ACCEPTED = ['.pdf'];
-const MAX_BYTES = 10 * 1024 * 1024;
-
-function isValidFile(file: File): string | true {
-    const ext = '.' + file.name.split('.').pop()?.toLowerCase();
-    if (!ACCEPTED.includes(ext)) return 'Accepted format: PDF';
-    if (file.size > MAX_BYTES) return 'File cannot be larger than 10 MB';
-    return true;
-}
+import { isValidFile } from '@/lib/validators';
+import { useAnalyzeMutation } from '@/hooks/useAnalyzeMutation';
+import { Loader2, X } from 'lucide-react';
 
 export function FileUploadForm() {
     const [isDragging, setIsDragging] = useState(false);
+    const {
+        analyzeResume,
+        error: mutationError,
+        isPending,
+    } = useAnalyzeMutation();
+
     const {
         register,
         handleSubmit,
@@ -89,63 +88,151 @@ export function FileUploadForm() {
         if (file) applyFile(file);
     };
 
-    return (
-        <form className='space-y-6'>
-            <div className='space-y-2'>
-                <Label className='text-sm font-medium text-foreground'>
-                    Resume file
-                </Label>
-                <div className='relative border-2 border-dashed rounded-xl p-8 border-border bg-muted/30'>
-                    <label className='flex flex-col items-center justify-center text-center cursor-pointer'>
-                        <input type='file' className='sr-only' accept='.pdf' />
-                        <div className='w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-4'>
-                            <UploadIcon className='w-8 h-8 text-primary' />
-                        </div>
-                        <p className='text-foreground font-medium mb-1'>
-                            Drag and drop the file here
-                        </p>
-                        <p className='text-sm text-muted-foreground mb-3'>
-                            or click to browse files
-                        </p>
-                        <span className='text-xs text-muted-foreground/70 bg-muted px-3 py-1 rounded-full'>
-                            PDF • Max 10MB
-                        </span>
-                    </label>
-                </div>
-            </div>
+    const onSubmit = (data: FormData) => {
+        if (!data.file) return;
 
-            <div className='space-y-2'>
-                <Label
-                    htmlFor='jobOffer'
-                    className='text-sm font-medium text-foreground'>
-                    Job offer content
-                </Label>
-                <Textarea
-                    id='jobOffer'
-                    placeholder='Paste the text of the job posting you are applying for here...'
-                    className='min-h-[180px] resize-none bg-muted/30 border-border rounded-xl'
-                    {...register('jobOffer', {
-                        required: 'Job offer content is required',
-                        minLength: {
-                            value: 50,
-                            message: 'Please paste at least 50 characters',
-                        },
-                    })}
-                />
-                {errors.jobOffer && (
+        analyzeResume({ file: data.file, jobOffer: data.jobOffer });
+    };
+
+    return (
+        <div className='relative'>
+            {isPending && (
+                <div
+                    className='absolute inset-0 z-10 flex flex-col items-center justify-center
+                        gap-3 rounded-2xl bg-background/80 backdrop-blur-sm'>
+                    <Loader2 className='h-7 w-7 animate-spin text-foreground' />
+                    <p className='text-sm font-medium text-foreground'>
+                        Analysing CV…
+                    </p>
+                    <p className='text-xs text-muted-foreground'>
+                        This may take a few seconds
+                    </p>
+                </div>
+            )}
+
+            <form
+                onSubmit={handleSubmit(onSubmit)}
+                className={`space-y-6 transition-opacity ${isPending ? 'opacity-40 pointer-events-none' : ''}`}>
+                <div className='space-y-2'>
+                    <Label className='text-sm font-medium text-foreground'>
+                        Resume file
+                    </Label>
+
+                    <div
+                        onDragOver={handleDragOver}
+                        onDragLeave={handleDragLeave}
+                        onDrop={handleDrop}
+                        className={`relative border-2 border-dashed rounded-xl transition-colors
+                        ${isDragging ? 'border-primary bg-primary/5' : 'border-border bg-muted/30'}
+                        ${uploadedFile ? 'border-solid border-primary/60' : ''}
+                        `}>
+                        {uploadedFile ? (
+                            <div className='flex items-center gap-3 px-5 py-4'>
+                                <div
+                                    className='w-10 h-10 rounded-full bg-primary/10 flex items-center
+                                justify-center shrink-0'>
+                                    <UploadIcon className='w-5 h-5 text-primary' />
+                                </div>
+                                <div className='flex-1 min-w-0'>
+                                    <p className='text-sm font-medium text-foreground truncate'>
+                                        {uploadedFile.name}
+                                    </p>
+                                    <p className='text-xs text-muted-foreground'>
+                                        {(
+                                            uploadedFile.size /
+                                            1024 /
+                                            1024
+                                        ).toFixed(2)}{' '}
+                                        MB
+                                    </p>
+                                </div>
+                                <button
+                                    type='button'
+                                    onClick={removeFile}
+                                    className='p-1.5 rounded-md text-muted-foreground hover:text-foreground
+                             hover:bg-muted transition-colors'
+                                    aria-label='Usuń plik'>
+                                    <X className='w-4 h-4' />
+                                </button>
+                            </div>
+                        ) : (
+                            <label
+                                className='flex flex-col items-center justify-center text-center
+                                cursor-pointer p-8'>
+                                <input
+                                    type='file'
+                                    className='sr-only'
+                                    accept='.pdf'
+                                    onChange={handleFileInputChange}
+                                />
+                                <div
+                                    className='w-16 h-16 rounded-full bg-primary/10 flex items-center
+                                justify-center mb-4'>
+                                    <UploadIcon className='w-8 h-8 text-primary' />
+                                </div>
+                                <p className='text-foreground font-medium mb-1'>
+                                    Drag and drop the file here
+                                </p>
+                                <p className='text-sm text-muted-foreground mb-3'>
+                                    or click to browse files
+                                </p>
+                                <span
+                                    className='text-xs text-muted-foreground/70 bg-muted
+                                 px-3 py-1 rounded-full'>
+                                    PDF • Max 10MB
+                                </span>
+                            </label>
+                        )}
+                    </div>
+
+                    {errors.file && (
+                        <p className='text-sm text-destructive'>
+                            {errors.file.message}
+                        </p>
+                    )}
+                </div>
+
+                <div className='space-y-2'>
+                    <Label
+                        htmlFor='jobOffer'
+                        className='text-sm font-medium text-foreground'>
+                        Job offer content
+                    </Label>
+                    <Textarea
+                        id='jobOffer'
+                        placeholder='Paste the text of the job posting you are applying for here...'
+                        className='min-h-[180px] resize-none bg-muted/30 border-border rounded-xl'
+                        {...register('jobOffer', {
+                            required: 'Job offer content is required',
+                            minLength: {
+                                value: 50,
+                                message: 'Please paste at least 50 characters',
+                            },
+                        })}
+                    />
+                    {errors.jobOffer && (
+                        <p className='text-sm text-destructive'>
+                            {errors.jobOffer.message}
+                        </p>
+                    )}
+                </div>
+
+                {mutationError && (
                     <p className='text-sm text-destructive'>
-                        {errors.jobOffer.message}
+                        {mutationError.message}
                     </p>
                 )}
-            </div>
 
-            <Button
-                type='submit'
-                className='w-full h-12 text-base font-medium rounded-xl bg-primary text-primary-foreground cursor-pointer'>
-                <span className='flex items-center gap-2'>
-                    Submit application
-                </span>
-            </Button>
-        </form>
+                <Button
+                    type='submit'
+                    disabled={isPending}
+                    className='w-full h-12 text-base font-medium rounded-xl
+                     bg-primary text-primary-foreground cursor-pointer'>
+                    <span className='flex items-center gap-2'>
+                        Submit application
+                    </span>
+                </Button>
+            </form>
+        </div>
     );
 }

@@ -1,6 +1,8 @@
 import json
 import os
 import logging
+import uuid
+
 from google import genai
 from google.genai import types
 from dotenv import load_dotenv
@@ -213,7 +215,6 @@ def analyze_resume_gemini(resume_text: str, job_description: str):
         )
 
         result = json.loads(response.text)
-
         result["score"] = int(result.get("score", 0))
         return result
 
