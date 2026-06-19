@@ -9,7 +9,8 @@ import { FormData } from '@/lib/types';
 import { useCallback, useState } from 'react';
 import { isValidFile } from '@/lib/validators';
 import { useAnalyzeMutation } from '@/hooks/useAnalyzeMutation';
-import { Loader2, X } from 'lucide-react';
+import { X } from 'lucide-react';
+import LoadingAnalyze from './ui/loading';
 
 export function FileUploadForm() {
     const [isDragging, setIsDragging] = useState(false);
@@ -96,19 +97,7 @@ export function FileUploadForm() {
 
     return (
         <div className='relative'>
-            {isPending && (
-                <div
-                    className='absolute inset-0 z-10 flex flex-col items-center justify-center
-                        gap-3 rounded-2xl bg-background/80 backdrop-blur-sm'>
-                    <Loader2 className='h-7 w-7 animate-spin text-foreground' />
-                    <p className='text-sm font-medium text-foreground'>
-                        Analysing CV…
-                    </p>
-                    <p className='text-xs text-muted-foreground'>
-                        This may take a few seconds
-                    </p>
-                </div>
-            )}
+            {isPending && <LoadingAnalyze />}
 
             <form
                 onSubmit={handleSubmit(onSubmit)}

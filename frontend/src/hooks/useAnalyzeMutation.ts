@@ -1,4 +1,4 @@
-import { queryClient } from '@/lib/queryClient';
+import { useAnalysisStore } from '@/store/analysisStore';
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
@@ -29,6 +29,7 @@ async function analyzeCV({ file, jobOffer }: AnalyzeVariables) {
 
 export function useAnalyzeMutation() {
     const router = useRouter();
+    const setResult = useAnalysisStore((s) => s.setResult);
 
     const {
         mutate: analyzeResume,
@@ -38,8 +39,7 @@ export function useAnalyzeMutation() {
         mutationFn: analyzeCV,
         mutationKey: ['analyze'],
         onSuccess: (data) => {
-            console.log(data);
-            queryClient.setQueryData(['analysis-result'], data);
+            setResult(data);
             router.push(`/results/${data.id}`);
         },
         onError: (error) => {
