@@ -1,9 +1,20 @@
 'use client';
 
+import LoadingAnalyze from '@/components/ui/loading-analyze';
 import { useAnalysisStore } from '@/store/analysisStore';
+import { useEffect } from 'react';
 
 export default function ResultPage() {
-    const result = useAnalysisStore((s) => s.result);
+    const { result, isLoading, setLoading } = useAnalysisStore();
+    console.log(result);
+
+    useEffect(() => {
+        setLoading(false);
+    }, []);
+
+    if (isLoading) {
+        return <LoadingAnalyze />;
+    }
 
     if (!result) {
         return (

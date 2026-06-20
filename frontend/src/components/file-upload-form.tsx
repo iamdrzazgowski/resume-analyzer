@@ -10,15 +10,13 @@ import { useCallback, useState } from 'react';
 import { isValidFile } from '@/lib/validators';
 import { useAnalyzeMutation } from '@/hooks/useAnalyzeMutation';
 import { X } from 'lucide-react';
-import LoadingAnalyze from './ui/loading';
+import LoadingAnalyze from './ui/loading-analyze';
+import { useAnalysisStore } from '@/store/analysisStore';
 
 export function FileUploadForm() {
     const [isDragging, setIsDragging] = useState(false);
-    const {
-        analyzeResume,
-        error: mutationError,
-        isPending,
-    } = useAnalyzeMutation();
+    const { analyzeResume, error: mutationError } = useAnalyzeMutation();
+    const isLoading = useAnalysisStore((s) => s.isLoading);
 
     const {
         register,
@@ -97,11 +95,14 @@ export function FileUploadForm() {
 
     return (
         <div className='relative'>
-            {isPending && <LoadingAnalyze />}
-
+            {isLoading && (
+                <div className='fixed inset-0 z-999 flex items-center justify-center bg-black/40'>
+                    <LoadingAnalyze />
+                </div>
+            )}
             <form
                 onSubmit={handleSubmit(onSubmit)}
-                className={`space-y-6 transition-opacity ${isPending ? 'opacity-40 pointer-events-none' : ''}`}>
+                className={`w-full max-w-xl min-w-0 space-y-6 transition-opacity ${isLoading ? 'opacity-40 pointer-events-none' : ''}`}>
                 <div className='space-y-2'>
                     <Label className='text-sm font-medium text-foreground'>
                         Resume file
@@ -181,7 +182,7 @@ export function FileUploadForm() {
                     )}
                 </div>
 
-                <div className='space-y-2'>
+                <div className='space-y-2 w-full min-w-0 max-w-full'>
                     <Label
                         htmlFor='jobOffer'
                         className='text-sm font-medium text-foreground'>
@@ -190,7 +191,7 @@ export function FileUploadForm() {
                     <Textarea
                         id='jobOffer'
                         placeholder='Paste the text of the job posting you are applying for here...'
-                        className='min-h-[180px] resize-none bg-muted/30 border-border rounded-xl'
+                        className='h-[180px] resize-none bg-muted/30 border-border rounded-xl overflow-x-hidden overflow-y-auto whitespace-pre-wrap wrap-break-word'
                         {...register('jobOffer', {
                             required: 'Job offer content is required',
                             minLength: {
@@ -214,7 +215,7 @@ export function FileUploadForm() {
 
                 <Button
                     type='submit'
-                    disabled={isPending}
+                    disabled={isLoading}
                     className='w-full h-12 text-base font-medium rounded-xl
                      bg-primary text-primary-foreground cursor-pointer'>
                     <span className='flex items-center gap-2'>

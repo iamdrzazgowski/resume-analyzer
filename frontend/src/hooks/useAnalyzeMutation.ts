@@ -29,23 +29,27 @@ async function analyzeCV({ file, jobOffer }: AnalyzeVariables) {
 
 export function useAnalyzeMutation() {
     const router = useRouter();
-    const setResult = useAnalysisStore((s) => s.setResult);
 
-    const {
-        mutate: analyzeResume,
-        isPending,
-        error,
-    } = useMutation({
+    const setResult = useAnalysisStore((s) => s.setResult);
+    const setLoading = useAnalysisStore((s) => s.setLoading);
+
+    const { mutate: analyzeResume, error } = useMutation({
         mutationFn: analyzeCV,
         mutationKey: ['analyze'],
+
+        onMutate: () => {
+            setLoading(true);
+        },
+
         onSuccess: (data) => {
             setResult(data);
             router.push(`/results/${data.id}`);
         },
-        onError: (error) => {
-            console.log(error);
+
+        onError: () => {
+            setLoading(false);
         },
     });
 
-    return { analyzeResume, isPending, error };
+    return { analyzeResume, error };
 }
