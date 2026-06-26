@@ -1,9 +1,11 @@
 'use client';
 
+import Chip from '@/components/chip';
+import ScoreBar from '@/components/score-bar';
 import { Button } from '@/components/ui/button';
 import LoadingAnalyze from '@/components/ui/loading-analyze';
 import { useAnalysisStore } from '@/store/analysisStore';
-import { ArrowLeft, CheckCircle2, XCircle } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
@@ -28,53 +30,6 @@ const BREAKDOWN_MAX = {
     experience_level: 25,
     project_relevance: 27,
 } as const;
-
-function ScoreBar({
-    value,
-    max,
-    color,
-}: {
-    value: number;
-    max: number;
-    color: string;
-}) {
-    const pct = Math.round((value / max) * 100);
-    return (
-        <div className='flex items-center gap-3'>
-            <div className='flex-1 h-1 rounded-full bg-muted overflow-hidden'>
-                <div
-                    className={`h-full rounded-full ${color}`}
-                    style={{ width: `${pct}%` }}
-                />
-            </div>
-            <span className='text-xs text-muted-foreground w-10 text-right tabular-nums'>
-                {value}/{max}
-            </span>
-        </div>
-    );
-}
-
-function Chip({
-    label,
-    variant,
-}: {
-    label: string;
-    variant: 'strength' | 'gap';
-}) {
-    const styles =
-        variant === 'strength'
-            ? 'bg-green-50 text-green-800 dark:bg-green-950 dark:text-green-200'
-            : 'bg-red-50 text-red-800 dark:bg-red-950 dark:text-red-200';
-    const Icon = variant === 'strength' ? CheckCircle2 : XCircle;
-
-    return (
-        <span
-            className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs ${styles}`}>
-            <Icon className='w-3 h-3' />
-            {label}
-        </span>
-    );
-}
 
 function ScoreColor(score: number) {
     if (score >= 75) return 'bg-green-500';
@@ -181,7 +136,6 @@ export default function ResultPage() {
                     </div>
                 </div>
 
-                {/* Strengths + Gaps */}
                 <div className='rounded-xl border border-border bg-card p-5 space-y-4'>
                     <div>
                         <p className='text-xs text-muted-foreground mb-2.5'>
