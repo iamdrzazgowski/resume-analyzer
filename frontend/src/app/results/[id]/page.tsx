@@ -1,6 +1,6 @@
 'use client';
 
-import Chip from '@/components/chip';
+import Chip from '@/components/ui/chip';
 import ScoreBar from '@/components/score-bar';
 import { Button } from '@/components/ui/button';
 import LoadingAnalyze from '@/components/ui/loading-analyze';
