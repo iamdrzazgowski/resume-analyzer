@@ -7,16 +7,16 @@ export default function ScoreBar({
     max: number;
     color: string;
 }) {
-    const pct = Math.round((value / max) * 100);
+    const pct = Math.min(100, Math.round((value / max) * 100));
     return (
-        <div className='flex items-center gap-3'>
-            <div className='flex-1 h-1 rounded-full bg-muted overflow-hidden'>
+        <div className='flex flex-1 items-center gap-3'>
+            <div className='h-0.75 flex-1 overflow-hidden rounded-full bg-muted'>
                 <div
-                    className={`h-full rounded-full ${color}`}
+                    className={`h-full rounded-full transition-[width] duration-700 ease-out ${color}`}
                     style={{ width: `${pct}%` }}
                 />
             </div>
-            <span className='text-xs text-muted-foreground w-10 text-right tabular-nums'>
+            <span className='w-12 shrink-0 text-right font-mono text-[11px] tabular-nums text-muted-foreground'>
                 {value}/{max}
             </span>
         </div>

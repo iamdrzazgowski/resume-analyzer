@@ -7,16 +7,17 @@ export default function Chip({
     label: string;
     variant: 'strength' | 'gap';
 }) {
-    const styles =
-        variant === 'strength'
-            ? 'bg-green-50 text-green-800 dark:bg-green-950 dark:text-green-200'
-            : 'bg-red-50 text-red-800 dark:bg-red-950 dark:text-red-200';
-    const Icon = variant === 'strength' ? CheckCircle2 : XCircle;
+    const isStrength = variant === 'strength';
+    const Icon = isStrength ? CheckCircle2 : XCircle;
 
     return (
         <span
-            className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs ${styles}`}>
-            <Icon className='w-3 h-3' />
+            className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs ${
+                isStrength
+                    ? 'border-(--brass-dim) bg-(--brass-dim) text-(--brass-soft)'
+                    : 'border-border bg-muted/60 text-muted-foreground'
+            }`}>
+            <Icon className='h-3 w-3' />
             {label}
         </span>
     );

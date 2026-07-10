@@ -9,9 +9,12 @@ import { FormData } from '@/lib/types';
 import { useCallback, useState } from 'react';
 import { isValidFile } from '@/lib/validators';
 import { useAnalyzeMutation } from '@/hooks/useAnalyzeMutation';
-import { X } from 'lucide-react';
+import { ArrowRight, X } from 'lucide-react';
 import LoadingAnalyze from './ui/loading-analyze';
 import { useAnalysisStore } from '@/store/analysisStore';
+
+const FIELD_LABEL =
+    'font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground';
 
 export function FileUploadForm() {
     const [isDragging, setIsDragging] = useState(false);
@@ -94,40 +97,39 @@ export function FileUploadForm() {
     };
 
     return (
-        <div className='relative'>
-            {isLoading && (
-                <div className='fixed inset-0 z-999 flex items-center justify-center bg-black/40'>
-                    <LoadingAnalyze />
-                </div>
-            )}
+        <>
+            {isLoading && <LoadingAnalyze />}
+
             <form
                 onSubmit={handleSubmit(onSubmit)}
-                className={`w-full max-w-xl min-w-0 space-y-6 transition-opacity ${isLoading ? 'opacity-40 pointer-events-none' : ''}`}>
-                <div className='space-y-2'>
-                    <Label className='text-sm font-medium text-foreground'>
-                        Resume file
-                    </Label>
+                className={`w-full max-w-xl min-w-0 space-y-8 transition-opacity ${isLoading ? 'pointer-events-none opacity-40' : ''}`}>
+                <div className='space-y-2.5'>
+                    <Label className={FIELD_LABEL}>Résumé</Label>
 
                     <div
                         onDragOver={handleDragOver}
                         onDragLeave={handleDragLeave}
                         onDrop={handleDrop}
-                        className={`relative border-2 border-dashed rounded-xl transition-colors
-                        ${isDragging ? 'border-primary bg-primary/5' : 'border-border bg-muted/30'}
-                        ${uploadedFile ? 'border-solid border-primary/60' : ''}
+                        className={`relative rounded-lg border transition-colors
+                        ${
+                            isDragging
+                                ? 'border-(--brass) bg-(--brass-dim)'
+                                : 'border-border bg-muted/20'
+                        }
+                        ${uploadedFile ? 'border-(--brass-dim)' : 'border-dashed'}
                         `}>
                         {uploadedFile ? (
                             <div className='flex items-center gap-3 px-5 py-4'>
                                 <div
-                                    className='w-10 h-10 rounded-full bg-primary/10 flex items-center
-                                justify-center shrink-0'>
-                                    <UploadIcon className='w-5 h-5 text-primary' />
+                                    className='flex h-10 w-10 shrink-0 items-center
+                                justify-center rounded-full bg-(--brass-dim)'>
+                                    <UploadIcon className='h-5 w-5 text-(--brass-soft)' />
                                 </div>
-                                <div className='flex-1 min-w-0'>
-                                    <p className='text-sm font-medium text-foreground truncate'>
+                                <div className='min-w-0 flex-1'>
+                                    <p className='truncate text-sm text-foreground'>
                                         {uploadedFile.name}
                                     </p>
-                                    <p className='text-xs text-muted-foreground'>
+                                    <p className='font-mono text-[11px] text-muted-foreground'>
                                         {(
                                             uploadedFile.size /
                                             1024 /
@@ -139,16 +141,16 @@ export function FileUploadForm() {
                                 <button
                                     type='button'
                                     onClick={removeFile}
-                                    className='p-1.5 rounded-md text-muted-foreground hover:text-foreground
-                             hover:bg-muted transition-colors'
-                                    aria-label='Usuń plik'>
-                                    <X className='w-4 h-4' />
+                                    className='rounded-md p-1.5 text-muted-foreground
+                             transition-colors hover:bg-muted hover:text-foreground'
+                                    aria-label='Remove file'>
+                                    <X className='h-4 w-4' />
                                 </button>
                             </div>
                         ) : (
                             <label
                                 className='flex flex-col items-center justify-center text-center
-                                cursor-pointer p-8'>
+                                cursor-pointer p-10'>
                                 <input
                                     type='file'
                                     className='sr-only'
@@ -156,20 +158,20 @@ export function FileUploadForm() {
                                     onChange={handleFileInputChange}
                                 />
                                 <div
-                                    className='w-16 h-16 rounded-full bg-primary/10 flex items-center
-                                justify-center mb-4'>
-                                    <UploadIcon className='w-8 h-8 text-primary' />
+                                    className='mb-4 flex h-14 w-14 items-center
+                                justify-center rounded-full bg-(--brass-dim)'>
+                                    <UploadIcon className='h-6 w-6 text-(--brass-soft)' />
                                 </div>
-                                <p className='text-foreground font-medium mb-1'>
-                                    Drag and drop the file here
+                                <p className='mb-1 text-[0.95rem] text-foreground'>
+                                    Drag and drop your résumé
                                 </p>
-                                <p className='text-sm text-muted-foreground mb-3'>
+                                <p className='mb-4 text-sm text-muted-foreground'>
                                     or click to browse files
                                 </p>
                                 <span
-                                    className='text-xs text-muted-foreground/70 bg-muted
-                                 px-3 py-1 rounded-full'>
-                                    PDF • Max 10MB
+                                    className='rounded-full bg-muted px-3 py-1 font-mono
+                                 text-[10px] tracking-wide text-muted-foreground'>
+                                    PDF · MAX 10MB
                                 </span>
                             </label>
                         )}
@@ -182,16 +184,16 @@ export function FileUploadForm() {
                     )}
                 </div>
 
-                <div className='space-y-2 w-full min-w-0 max-w-full'>
-                    <Label
-                        htmlFor='jobOffer'
-                        className='text-sm font-medium text-foreground'>
-                        Job offer content
+                <div className='w-full min-w-0 max-w-full space-y-2.5'>
+                    <Label htmlFor='jobOffer' className={FIELD_LABEL}>
+                        Job description
                     </Label>
                     <Textarea
                         id='jobOffer'
-                        placeholder='Paste the text of the job posting you are applying for here...'
-                        className='h-[180px] resize-none bg-muted/30 border-border rounded-xl overflow-x-hidden overflow-y-auto whitespace-pre-wrap wrap-break-word'
+                        placeholder='Paste the job description you are applying to here'
+                        className='h-45 resize-none overflow-x-hidden overflow-y-auto rounded-lg
+                        border-border bg-muted/20 whitespace-pre-wrap wrap-break-word
+                        focus-visible:border-(--brass-dim) focus-visible:ring-(--brass-dim)'
                         {...register('jobOffer', {
                             required: 'Job offer content is required',
                             minLength: {
@@ -216,13 +218,13 @@ export function FileUploadForm() {
                 <Button
                     type='submit'
                     disabled={isLoading}
-                    className='w-full h-12 text-base font-medium rounded-xl
-                     bg-primary text-primary-foreground cursor-pointer'>
+                    className='group h-12 w-full text-[0.95rem] font-medium'>
                     <span className='flex items-center gap-2'>
-                        Submit application
+                        Get your verdict
+                        <ArrowRight className='h-4 w-4 transition-transform group-hover:translate-x-0.5' />
                     </span>
                 </Button>
             </form>
-        </div>
+        </>
     );
 }
