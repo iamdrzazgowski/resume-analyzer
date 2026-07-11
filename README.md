@@ -2,7 +2,7 @@
 
 Know the verdict before the recruiter does. Paste a job description, upload a résumé, and get a precise, evidence-based match score instead of vague advice.
 
-![Verdict — hero](https://github.com/user-attachments/assets/975757c9-1a2d-44a9-87ad-f060bbde3c69)
+![Verdict — hero](https://github.com/user-attachments/assets/c0835160-4631-46f9-9b7c-3f6e33d7a7b4)
 
 ## What it does
 
