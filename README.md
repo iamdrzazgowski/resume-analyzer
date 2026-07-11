@@ -2,7 +2,7 @@
 
 Know the verdict before the recruiter does. Paste a job description, upload a résumé, and get a precise, evidence-based match score instead of vague advice.
 
-![Verdict — hero](frontend/public/readme/hero.png)
+![Verdict — hero](https://github.com/user-attachments/assets/975757c9-1a2d-44a9-87ad-f060bbde3c69)
 
 ## What it does
 
@@ -18,11 +18,11 @@ Nothing is stored beyond the session — no signup required.
 
 **Analyze**
 
-![Upload form](frontend/public/readme/analyze.png)
+![Upload form](https://github.com/user-attachments/assets/86da22a3-fca9-4a26-b0f3-9c4d954b3679)
 
 **Verdict**
 
-![Results page](frontend/public/readme/results.png)
+![Results page](https://github.com/user-attachments/assets/6b830959-8812-443c-8e6f-17a787dfbbf4)
 
 ## Tech stack
 
