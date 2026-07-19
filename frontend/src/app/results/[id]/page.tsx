@@ -27,12 +27,14 @@ function tier(pct: number) {
 }
 
 export default function ResultPage() {
-    const { result: data, isLoading, setLoading } = useAnalysisStore();
+    const data = useAnalysisStore((s) => s.result);
+    const isLoading = useAnalysisStore((s) => s.isLoading);
+    const setLoading = useAnalysisStore((s) => s.setLoading);
     const router = useRouter();
 
     useEffect(() => {
         setLoading(false);
-    }, []);
+    }, [setLoading]);
 
     if (isLoading) {
         return <LoadingAnalyze />;
@@ -110,7 +112,7 @@ export default function ResultPage() {
                     <div className='mt-10 space-y-5'>
                         {BREAKDOWN.map(({ label, key, max }) => {
                             const value = data.score_breakdown[key];
-                            const pct = tier(
+                            const tierStyle = tier(
                                 Math.round((value / max) * 100),
                             );
                             return (
@@ -123,7 +125,7 @@ export default function ResultPage() {
                                     <ScoreBar
                                         value={value}
                                         max={max}
-                                        color={pct.bar}
+                                        color={tierStyle.bar}
                                     />
                                 </div>
                             );

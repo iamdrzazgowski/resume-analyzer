@@ -1,4 +1,5 @@
 import { ArrowRight } from 'lucide-react';
+import { REVEAL_DELAY_MS } from '@/lib/animation';
 import { ScanVisual } from './scan-visual';
 
 export function HeroSection() {
@@ -13,7 +14,7 @@ export function HeroSection() {
                 <div>
                     <p
                         className='mb-7 flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground opacity-0 animate-reveal-up'
-                        style={{ animationDelay: '80ms' }}>
+                        style={{ animationDelay: `${REVEAL_DELAY_MS.badge}ms` }}>
                         <span
                             aria-hidden
                             className='h-1.5 w-1.5 rounded-full bg-(--brass)'
@@ -23,7 +24,7 @@ export function HeroSection() {
 
                     <h1
                         className='max-w-xl text-balance font-heading text-[2.75rem] leading-[1.08] text-foreground opacity-0 animate-reveal-up sm:text-[3.4rem] md:text-[3.75rem]'
-                        style={{ animationDelay: '180ms' }}>
+                        style={{ animationDelay: `${REVEAL_DELAY_MS.heading}ms` }}>
                         Know the{' '}
                         <em className='not-italic text-(--brass-soft)'>
                             verdict
@@ -33,7 +34,7 @@ export function HeroSection() {
 
                     <p
                         className='mt-7 max-w-md text-[1.05rem] leading-relaxed text-muted-foreground opacity-0 animate-reveal-up'
-                        style={{ animationDelay: '300ms' }}>
+                        style={{ animationDelay: `${REVEAL_DELAY_MS.lead}ms` }}>
                         Paste the job description. Upload your résumé. Get a
                         precise, evidence-based match score, the exact gaps
                         holding you back, and what to fix, in under a minute.
@@ -41,7 +42,7 @@ export function HeroSection() {
 
                     <div
                         className='mt-10 flex flex-wrap items-center gap-6 opacity-0 animate-reveal-up'
-                        style={{ animationDelay: '420ms' }}>
+                        style={{ animationDelay: `${REVEAL_DELAY_MS.actions}ms` }}>
                         <a
                             href='#analyze'
                             className='group inline-flex h-12 items-center gap-2 rounded-[calc(var(--radius)*0.9)] bg-primary px-6 text-[0.95rem] font-medium text-primary-foreground transition-transform active:translate-y-px'>
@@ -57,14 +58,14 @@ export function HeroSection() {
 
                     <p
                         className='mt-8 font-mono text-[11px] tracking-wide text-muted-foreground/70 opacity-0 animate-reveal-up'
-                        style={{ animationDelay: '520ms' }}>
+                        style={{ animationDelay: `${REVEAL_DELAY_MS.footnote}ms` }}>
                         No signup · Nothing stored beyond your session
                     </p>
                 </div>
 
                 <div
                     className='opacity-0 animate-reveal-up lg:justify-self-end'
-                    style={{ animationDelay: '360ms' }}>
+                    style={{ animationDelay: `${REVEAL_DELAY_MS.visual}ms` }}>
                     <ScanVisual />
                 </div>
             </div>

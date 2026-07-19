@@ -1,6 +1,10 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import {
+    SCAN_LINE_REVEAL_BASE_MS,
+    SCAN_LINE_REVEAL_STRIDE_MS,
+} from '@/lib/animation';
 
 interface ScanLine {
     text: string;
@@ -93,7 +97,7 @@ export function ScanVisual() {
                             key={line.text}
                             className='flex items-center gap-3 opacity-0 animate-reveal-up'
                             style={{
-                                animationDelay: `${300 + i * 320}ms`,
+                                animationDelay: `${SCAN_LINE_REVEAL_BASE_MS + i * SCAN_LINE_REVEAL_STRIDE_MS}ms`,
                                 animationFillMode: 'forwards',
                             }}>
                             <span
