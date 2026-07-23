@@ -30,9 +30,7 @@ function UploadedFilePreview({
                 <UploadIcon className='h-5 w-5 text-(--brass-soft)' />
             </div>
             <div className='min-w-0 flex-1'>
-                <p className='truncate text-sm text-foreground'>
-                    {file.name}
-                </p>
+                <p className='truncate text-sm text-foreground'>{file.name}</p>
                 <p className='font-mono text-[11px] text-muted-foreground'>
                     {(file.size / 1024 / 1024).toFixed(2)} MB
                 </p>
@@ -56,10 +54,9 @@ function EmptyDropzone({
     inputRef: React.RefObject<HTMLInputElement | null>;
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }) {
+    // return <h1>TEST</h1>;
     return (
-        <label
-            className='flex flex-col items-center justify-center text-center
-                cursor-pointer p-10'>
+        <label className='flex flex-col items-center justify-center text-center cursor-pointer p-10'>
             <input
                 ref={inputRef}
                 type='file'
@@ -67,20 +64,16 @@ function EmptyDropzone({
                 accept='.pdf'
                 onChange={onChange}
             />
-            <div
-                className='mb-4 flex h-14 w-14 items-center
-                justify-center rounded-full bg-(--brass-dim)'>
+            <div className='mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-(--brass-dim)'>
                 <UploadIcon className='h-6 w-6 text-(--brass-soft)' />
             </div>
             <p className='mb-1 text-[0.95rem] text-foreground'>
-                Drag and drop your résumé
+                Drag and drop your resume
             </p>
             <p className='mb-4 text-sm text-muted-foreground'>
                 or click to browse files
             </p>
-            <span
-                className='rounded-full bg-muted px-3 py-1 font-mono
-                 text-[10px] tracking-wide text-muted-foreground'>
+            <span className='rounded-full bg-muted px-3 py-1 font-mono text-[10px] tracking-wide text-muted-foreground'>
                 PDF · MAX 10MB
             </span>
         </label>

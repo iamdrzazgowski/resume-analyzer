@@ -14,15 +14,11 @@ async function analyzeCV({ file, jobOffer }: AnalyzeVariables) {
     formData.append('resume_file', file);
     formData.append('job_description', jobOffer);
 
-    const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/analyze`,
-        formData,
-        {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            },
+    const response = await axios.post(`/api/analyze`, formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
         },
-    );
+    });
 
     return response.data;
 }
