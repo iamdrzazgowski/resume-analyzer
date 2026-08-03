@@ -12,6 +12,7 @@ import LoadingAnalyze from './ui/loading-analyze';
 import { Textarea } from './ui/textarea';
 import EmptyDropzone from './empty-dropzone';
 import UploadedFilePreview from './uploaded-file-preview';
+import { useEffect } from 'react';
 
 const FIELD_LABEL =
     'font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground';
@@ -55,6 +56,14 @@ export function FileUploadForm() {
         setError,
         clearErrors,
     });
+
+    useEffect(() => {
+        document.body.style.overflow = isLoading ? 'hidden' : '';
+
+        return () => {
+            document.body.style.overflow = '';
+        };
+    }, [isLoading]);
 
     const onSubmit = (data: FormData) => {
         if (!data.file) return;
