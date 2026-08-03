@@ -74,7 +74,7 @@ function EmptyDropzone({
                 or click to browse files
             </p>
             <span className='rounded-full bg-muted px-3 py-1 font-mono text-[10px] tracking-wide text-muted-foreground'>
-                PDF · MAX 10MB
+                PDF · MAX 5MB
             </span>
         </label>
     );
