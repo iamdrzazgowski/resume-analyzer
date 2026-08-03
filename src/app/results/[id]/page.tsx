@@ -49,9 +49,7 @@ export default function ResultPage() {
                 <h1 className='font-heading text-3xl text-foreground'>
                     We couldn&apos;t find that analysis
                 </h1>
-                <Button onClick={() => router.push('/')}>
-                    Back to form
-                </Button>
+                <Button onClick={() => router.push('/')}>Back to form</Button>
             </div>
         );
     }
@@ -92,8 +90,8 @@ export default function ResultPage() {
                                 Your verdict
                             </h1>
                             <p className='mt-2 max-w-xs text-sm leading-relaxed text-muted-foreground'>
-                                Based on required skills, experience level
-                                and project relevance.
+                                Based on required skills, experience level and
+                                project relevance.
                             </p>
                         </div>
                         <div className='flex items-baseline gap-1.5'>
