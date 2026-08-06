@@ -39,6 +39,7 @@ export function useAnalyzeMutation() {
 
         onSuccess: (data) => {
             setResult(data);
+            console.log(data);
             router.push(`/results/${data.id}`);
         },
 
