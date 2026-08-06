@@ -1,19 +1,8 @@
+import type { AnalysisResult } from '@/lib/schemas';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-export type AnalysisResult = {
-    id: string;
-    score: number;
-    score_breakdown: {
-        required_skills: number;
-        experience_level: number;
-        project_relevance: number;
-    };
-    strengths: string[];
-    gaps: string[];
-    suggestions: string[];
-    scoring_notes: string;
-};
+export type { AnalysisResult };
 
 type Store = {
     result: AnalysisResult | null;
