@@ -114,7 +114,7 @@ export default function ResultPage() {
     return (
         <div className='min-h-screen bg-background'>
             <div className='sticky top-0 z-10 border-b border-border bg-background/80 backdrop-blur-md'>
-                <div className='mx-auto flex max-w-2xl items-center justify-between px-6 py-4'>
+                <div className='mx-auto flex max-w-3xl items-center justify-between px-6 py-4'>
                     <Link
                         href='/'
                         className='font-mono text-[13px] tracking-[0.18em] text-foreground'>
