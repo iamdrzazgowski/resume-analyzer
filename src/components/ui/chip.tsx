@@ -12,10 +12,10 @@ export default function Chip({
 
     return (
         <span
-            className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm ${
+            className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm font-medium ${
                 isStrength
-                    ? 'border-(--brass-dim) bg-(--brass-dim) text-(--brass-soft)'
-                    : 'border-border bg-muted/60 text-muted-foreground'
+                    ? 'border-(--success-soft-border) bg-(--success-soft) text-(--success-foreground)'
+                    : 'border-(--destructive-soft-border) bg-(--destructive-soft) text-destructive'
             }`}>
             <Icon className="h-4 w-4 shrink-0" />
             {label}

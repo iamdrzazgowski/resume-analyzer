@@ -14,8 +14,7 @@ import EmptyDropzone from './empty-dropzone';
 import UploadedFilePreview from './uploaded-file-preview';
 import { useEffect } from 'react';
 
-const FIELD_LABEL =
-    'font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground';
+const FIELD_LABEL = 'text-sm font-medium text-foreground';
 
 export function FileUploadForm() {
     const { analyzeResume, error: mutationError } = useAnalyzeMutation();
@@ -85,13 +84,13 @@ export function FileUploadForm() {
                         onDragOver={handleDragOver}
                         onDragLeave={handleDragLeave}
                         onDrop={handleDrop}
-                        className={`relative rounded-lg border transition-colors
+                        className={`relative rounded-xl border transition-colors
                         ${
                             isDragging
-                                ? 'border-(--brass) bg-(--brass-dim)'
-                                : 'border-border bg-muted/20'
+                                ? 'border-(--brand) bg-(--brand-soft)'
+                                : 'border-border bg-muted/30'
                         }
-                        ${uploadedFile ? 'border-(--brass-dim)' : 'border-dashed'}
+                        ${uploadedFile ? 'border-(--brand-soft-border) bg-(--brand-soft)' : 'border-dashed'}
                         `}>
                         {uploadedFile ? (
                             <UploadedFilePreview
@@ -120,9 +119,9 @@ export function FileUploadForm() {
                     <Textarea
                         id='jobOffer'
                         placeholder='Paste the job description you are applying to here'
-                        className='h-45 resize-none overflow-x-hidden overflow-y-auto rounded-lg
-                        border-border bg-muted/20 whitespace-pre-wrap wrap-break-word
-                        focus-visible:border-(--brass-dim) focus-visible:ring-(--brass-dim)'
+                        className='h-45 resize-none overflow-x-hidden overflow-y-auto rounded-xl
+                        border-border bg-muted/30 whitespace-pre-wrap wrap-break-word
+                        focus-visible:border-(--brand) focus-visible:ring-(--brand)/20'
                         {...register('jobOffer', {
                             required: 'Job offer content is required',
                             minLength: {

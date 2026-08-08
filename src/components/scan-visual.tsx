@@ -62,30 +62,30 @@ export function ScanVisual() {
 
     return (
         <div className='relative w-full max-w-110 select-none'>
-            <div className='relative overflow-hidden rounded-lg border border-border bg-card'>
+            <div className='relative overflow-hidden rounded-2xl border border-border bg-card shadow-lg shadow-slate-900/5'>
                 {phase === 'scanning' && (
                     <div
                         aria-hidden
                         className='absolute inset-x-0 h-16 animate-scan-sweep'
                         style={{
                             background:
-                                'linear-gradient(to bottom, transparent, var(--brass-dim) 45%, var(--brass-dim) 55%, transparent)',
-                            boxShadow: '0 0 24px 0 var(--brass-dim)',
+                                'linear-gradient(to bottom, transparent, var(--brand-soft) 45%, var(--brand-soft) 55%, transparent)',
+                            boxShadow: '0 0 24px 0 var(--brand-soft)',
                         }}
                     />
                 )}
 
-                <div className='flex items-center justify-between border-b border-border px-5 py-3.5'>
+                <div className='flex items-center justify-between border-b border-border bg-muted/40 px-5 py-3.5'>
                     <div className='flex items-center gap-2'>
                         <span className='font-mono text-[11px] tracking-wide text-muted-foreground'>
                             resume_alex-chen.pdf
                         </span>
                     </div>
                     <span
-                        className={`font-mono text-[10px] uppercase tracking-[0.12em] transition-colors duration-500 ${
+                        className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium uppercase tracking-[0.1em] transition-colors duration-500 ${
                             phase === 'scanning'
-                                ? 'text-muted-foreground'
-                                : 'text-(--brass-soft)'
+                                ? 'bg-muted text-muted-foreground'
+                                : 'bg-(--success-soft) text-(--success-foreground)'
                         }`}>
                         {phase === 'scanning' ? 'analyzing' : 'matched'}
                     </span>
@@ -104,7 +104,7 @@ export function ScanVisual() {
                                 aria-hidden
                                 className={`h-1.25 w-1.25 shrink-0 rounded-full ${
                                     line.match
-                                        ? 'bg-(--brass)'
+                                        ? 'bg-(--success)'
                                         : 'bg-muted-foreground opacity-40'
                                 }`}
                             />
@@ -117,7 +117,7 @@ export function ScanVisual() {
 
                 <div className='flex items-center justify-between border-t border-border px-5 py-4'>
                     <div className='flex flex-col gap-1'>
-                        <span className='font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground'>
+                        <span className='text-[10px] font-medium uppercase tracking-[0.1em] text-muted-foreground'>
                             Match score
                         </span>
                         <span className='text-[11px] text-muted-foreground'>
@@ -125,7 +125,7 @@ export function ScanVisual() {
                         </span>
                     </div>
                     <div className='flex items-baseline gap-1 font-mono tabular-nums'>
-                        <span className='text-3xl text-foreground'>
+                        <span className='text-3xl font-semibold text-foreground'>
                             {score}
                         </span>
                         <span className='text-sm text-muted-foreground'>
@@ -137,8 +137,8 @@ export function ScanVisual() {
 
             <div
                 aria-hidden
-                className='absolute -inset-x-4 -bottom-4 -z-10 h-16 rounded-full opacity-40 blur-2xl'
-                style={{ background: 'var(--brass-dim)' }}
+                className='absolute -inset-x-4 -bottom-4 -z-10 h-16 rounded-full opacity-50 blur-2xl'
+                style={{ background: 'var(--brand-soft-border)' }}
             />
         </div>
     );

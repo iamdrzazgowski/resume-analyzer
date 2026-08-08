@@ -12,12 +12,14 @@ export default function UploadedFilePreview({
         <div className='flex items-center gap-3 px-5 py-4'>
             <div
                 className='flex h-10 w-10 shrink-0 items-center
-                justify-center rounded-full bg-(--brass-dim)'>
-                <UploadIcon className='h-5 w-5 text-(--brass-soft)' />
+                justify-center rounded-full bg-(--brand-soft)'>
+                <UploadIcon className='h-5 w-5 text-(--brand-foreground)' />
             </div>
             <div className='min-w-0 flex-1'>
-                <p className='truncate text-sm text-foreground'>{file.name}</p>
-                <p className='font-mono text-[11px] text-muted-foreground'>
+                <p className='truncate text-sm font-medium text-foreground'>
+                    {file.name}
+                </p>
+                <p className='text-[11px] text-muted-foreground'>
                     {(file.size / 1024 / 1024).toFixed(2)} MB
                 </p>
             </div>

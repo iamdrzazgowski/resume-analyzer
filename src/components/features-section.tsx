@@ -18,28 +18,30 @@ const FEATURES = [
 
 export function FeaturesSection() {
     return (
-        <section
-            id='what-you-get'
-            className='border-t border-border bg-card/40'>
+        <section id='what-you-get' className='border-t border-border bg-muted/30'>
             <div className='mx-auto max-w-6xl px-6 py-28 md:px-10'>
                 <div className='mb-16 max-w-lg'>
-                    <p className='mb-4 font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground'>
+                    <p className='mb-4 flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground'>
+                        <span
+                            aria-hidden
+                            className='h-1.5 w-1.5 rounded-full bg-(--brand)'
+                        />
                         What you get
                     </p>
-                    <h2 className='text-balance font-heading text-4xl leading-tight text-foreground md:text-[2.75rem]'>
+                    <h2 className='text-balance text-4xl leading-tight font-semibold tracking-tight text-foreground md:text-[2.5rem]'>
                         Precision, where advice used to be.
                     </h2>
                 </div>
 
-                <div className='divide-y divide-border'>
+                <div className='grid grid-cols-1 gap-6 md:grid-cols-3'>
                     {FEATURES.map((feature) => (
                         <div
                             key={feature.title}
-                            className='grid grid-cols-1 gap-4 py-9 md:grid-cols-[1fr_1.4fr] md:gap-16'>
-                            <h3 className='font-heading text-2xl text-foreground md:text-[1.9rem]'>
+                            className='rounded-2xl border border-border bg-card p-7 shadow-sm transition-shadow hover:shadow-md'>
+                            <h3 className='text-lg font-semibold text-foreground'>
                                 {feature.title}
                             </h3>
-                            <p className='max-w-lg text-[0.98rem] leading-relaxed text-muted-foreground'>
+                            <p className='mt-2.5 text-[0.95rem] leading-relaxed text-muted-foreground'>
                                 {feature.detail}
                             </p>
                         </div>

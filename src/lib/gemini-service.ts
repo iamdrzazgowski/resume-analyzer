@@ -72,8 +72,17 @@ function buildPrompt(resumeText: string, jobDescription: string): string {
       "job_analysis": {
         "job_title": "",
         "seniority_required": "",
-        "required_skills": [],
-        "preferred_skills": [],
+        "required_skills": [
+            {
+              "skill": "",
+              "importance": "high | medium | low"
+            }
+          ],
+        "preferred_skills": [
+          {
+            "skill": "",
+            "importance": "high | medium | low"
+          ],
         "main_responsibilities": []
       },
       "skills_analysis": {

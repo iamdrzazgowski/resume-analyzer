@@ -13,23 +13,21 @@ export function HeroSection() {
             <div className='relative mx-auto grid max-w-6xl gap-16 px-6 pt-24 pb-28 md:px-10 md:pt-32 md:pb-36 lg:grid-cols-[1.05fr_0.95fr] lg:items-center'>
                 <div>
                     <p
-                        className='mb-7 flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground opacity-0 animate-reveal-up'
+                        className='mb-7 flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1 text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground opacity-0 shadow-sm animate-reveal-up w-fit'
                         style={{ animationDelay: `${REVEAL_DELAY_MS.badge}ms` }}>
                         <span
                             aria-hidden
-                            className='h-1.5 w-1.5 rounded-full bg-(--brass)'
+                            className='h-1.5 w-1.5 rounded-full bg-(--brand)'
                         />
                         AI resume analysis
                     </p>
 
                     <h1
-                        className='max-w-xl text-balance font-heading text-[2.75rem] leading-[1.08] text-foreground opacity-0 animate-reveal-up sm:text-[3.4rem] md:text-[3.75rem]'
+                        className='max-w-xl text-balance text-[2.75rem] leading-[1.1] font-semibold tracking-tight text-foreground opacity-0 animate-reveal-up sm:text-[3.25rem] md:text-[3.5rem]'
                         style={{ animationDelay: `${REVEAL_DELAY_MS.heading}ms` }}>
                         Know the{' '}
-                        <em className='not-italic text-(--brass-soft)'>
-                            verdict
-                        </em>{' '}
-                        before the recruiter does.
+                        <span className='text-(--brand)'>verdict</span> before
+                        the recruiter does.
                     </h1>
 
                     <p
@@ -45,19 +43,19 @@ export function HeroSection() {
                         style={{ animationDelay: `${REVEAL_DELAY_MS.actions}ms` }}>
                         <a
                             href='#analyze'
-                            className='group inline-flex h-12 items-center gap-2 rounded-[calc(var(--radius)*0.9)] bg-primary px-6 text-[0.95rem] font-medium text-primary-foreground transition-transform active:translate-y-px'>
+                            className='group inline-flex h-12 items-center gap-2 rounded-lg bg-primary px-6 text-[0.95rem] font-medium text-primary-foreground shadow-sm transition-all hover:bg-primary/90 hover:shadow-md active:translate-y-px'>
                             Get your verdict
                             <ArrowRight className='h-4 w-4 transition-transform group-hover:translate-x-0.5' />
                         </a>
                         <a
                             href='#method'
-                            className='text-[0.95rem] text-muted-foreground underline-offset-4 transition-colors hover:text-foreground hover:underline'>
+                            className='text-[0.95rem] font-medium text-muted-foreground underline-offset-4 transition-colors hover:text-foreground hover:underline'>
                             See how it works
                         </a>
                     </div>
 
                     <p
-                        className='mt-8 font-mono text-[11px] tracking-wide text-muted-foreground/70 opacity-0 animate-reveal-up'
+                        className='mt-8 text-[13px] tracking-wide text-muted-foreground/80 opacity-0 animate-reveal-up'
                         style={{ animationDelay: `${REVEAL_DELAY_MS.footnote}ms` }}>
                         No signup · Nothing stored beyond your session
                     </p>

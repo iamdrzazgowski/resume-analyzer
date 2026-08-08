@@ -1,13 +1,12 @@
 import Link from 'next/link';
+import { Logo } from './logo';
 
 export function SiteHeader() {
     return (
-        <header className='sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md'>
+        <header className='sticky top-0 z-50 border-b border-border bg-background/85 backdrop-blur-md'>
             <div className='mx-auto flex max-w-6xl items-center justify-between px-6 py-4 md:px-10'>
-                <Link
-                    href='#'
-                    className='font-mono text-[13px] font-medium tracking-[0.18em] text-foreground'>
-                    VERDICT
+                <Link href='#' aria-label='Verdict home'>
+                    <Logo />
                 </Link>
 
                 <nav className='hidden items-center gap-8 md:flex'>
@@ -25,7 +24,7 @@ export function SiteHeader() {
 
                 <a
                     href='#analyze'
-                    className='inline-flex h-8 items-center rounded-[calc(var(--radius)*0.8)] border border-border px-3.5 text-sm text-foreground transition-colors hover:border-(--brass-dim) hover:bg-(--brass-dim)'>
+                    className='inline-flex h-9 items-center rounded-lg bg-primary px-4 text-sm font-medium text-primary-foreground shadow-sm transition-colors hover:bg-primary/90'>
                     Get your verdict
                 </a>
             </div>

@@ -23,26 +23,30 @@ export function MethodSection() {
     return (
         <section id='method' className='mx-auto max-w-6xl px-6 py-28 md:px-10'>
             <div className='mb-16 max-w-lg'>
-                <p className='mb-4 font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground'>
+                <p className='mb-4 flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground'>
+                    <span
+                        aria-hidden
+                        className='h-1.5 w-1.5 rounded-full bg-(--brand)'
+                    />
                     Method
                 </p>
-                <h2 className='text-balance font-heading text-4xl leading-tight text-foreground md:text-[2.75rem]'>
+                <h2 className='text-balance text-4xl leading-tight font-semibold tracking-tight text-foreground md:text-[2.5rem]'>
                     Three steps. No guesswork.
                 </h2>
             </div>
 
-            <div className='grid grid-cols-1 gap-y-12 md:grid-cols-3 md:gap-x-10'>
+            <div className='grid grid-cols-1 gap-6 md:grid-cols-3'>
                 {STEPS.map((step) => (
                     <div
                         key={step.number}
-                        className='border-t border-border pt-6'>
-                        <span className='font-mono text-sm text-(--brass-soft)'>
+                        className='rounded-2xl border border-border bg-card p-7 shadow-sm transition-shadow hover:shadow-md'>
+                        <span className='inline-flex h-8 w-8 items-center justify-center rounded-lg bg-(--brand-soft) font-mono text-sm font-semibold text-(--brand-foreground)'>
                             {step.number}
                         </span>
-                        <h3 className='mt-4 text-xl text-foreground'>
+                        <h3 className='mt-5 text-lg font-semibold text-foreground'>
                             {step.title}
                         </h3>
-                        <p className='mt-3 text-[0.95rem] leading-relaxed text-muted-foreground'>
+                        <p className='mt-2.5 text-[0.95rem] leading-relaxed text-muted-foreground'>
                             {step.detail}
                         </p>
                     </div>

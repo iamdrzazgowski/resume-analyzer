@@ -16,16 +16,16 @@ export default function EmptyDropzone({
                 accept='.pdf'
                 onChange={onChange}
             />
-            <div className='mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-(--brass-dim)'>
-                <UploadIcon className='h-6 w-6 text-(--brass-soft)' />
+            <div className='mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-(--brand-soft)'>
+                <UploadIcon className='h-6 w-6 text-(--brand-foreground)' />
             </div>
-            <p className='mb-1 text-[0.95rem] text-foreground'>
+            <p className='mb-1 text-[0.95rem] font-medium text-foreground'>
                 Drag and drop your resume
             </p>
             <p className='mb-4 text-sm text-muted-foreground'>
                 or click to browse files
             </p>
-            <span className='rounded-full bg-muted px-3 py-1 font-mono text-[10px] tracking-wide text-muted-foreground'>
+            <span className='rounded-full border border-border bg-muted px-3 py-1 text-[11px] font-medium text-muted-foreground'>
                 PDF · MAX 5MB
             </span>
         </label>
