@@ -135,6 +135,14 @@ function buildPrompt(resumeText: string, jobDescription: string): string {
     - overall_score.percentage: weighted blend of skills_analysis match quality (favor "high" importance skills), experience_analysis.match_percentage, and project relevance. Reserve 85-100 ("Excellent") for candidates matching nearly all high-importance requirements with strong direct evidence.
     - ats_analysis.keyword_match_score: literal + near-literal keyword overlap between CV text and job description, independent of semantic judgment — this is a raw ATS-style score, deliberately stricter than overall_score.
     - experience_analysis.match_percentage: how well the TYPE, SENIORITY, and DOMAIN of past experience — professional roles AND, for junior/entry-level postings, substantial named projects — align with what's required. Not a raw years-worked counter (see Rule 8).
+    - final_recommendation.confidence: represents how confident you are in the reliability of the assessment and the recommendation. It is NOT the candidate's match score and must NOT simply mirror overall_score.percentage.
+      - 90-100: Very strong evidence. The CV and job description contain clear, specific, and sufficient information to confidently evaluate the candidate.
+      - 75-89: Strong evidence with only minor uncertainty.
+      - 50-74: Moderate evidence. Some important information is missing or ambiguous.
+      - 25-49: Limited evidence. Several important requirements cannot be reliably evaluated.
+      - 0-24: Very limited evidence. The CV or job description lacks substantial information needed for a reliable assessment.
+      - A high overall score does NOT automatically mean high confidence, and a low overall score does NOT automatically mean low confidence.
+      - Base confidence on the completeness, specificity, and quality of the evidence available in the CV and job description.
 
     Now analyze the following:
 
