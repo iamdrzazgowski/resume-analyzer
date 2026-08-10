@@ -101,13 +101,14 @@ export default function ResultPage() {
     const data = useAnalysisStore((s) => s.result);
     const isLoading = useAnalysisStore((s) => s.isLoading);
     const setLoading = useAnalysisStore((s) => s.setLoading);
+    const hasHydrated = useAnalysisStore((s) => s.hasHydrated);
     const router = useRouter();
 
     useEffect(() => {
         setLoading(false);
     }, [setLoading]);
 
-    if (isLoading) {
+    if (!hasHydrated || isLoading) {
         return <LoadingAnalyze />;
     }
 

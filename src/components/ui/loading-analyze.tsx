@@ -1,13 +1,7 @@
 export default function LoadingAnalyze() {
     return (
         <div
-            className='
-                fixed inset-0 z-9999
-                flex flex-col items-center justify-center
-                gap-6
-                bg-background/95
-                backdrop-blur-sm
-            '>
+            className='fixed inset-0 z-9999 flex flex-col items-center justify-center gap-6 bg-background/95 backdrop-blur-sm'>
             <div className='h-1 w-40 overflow-hidden rounded-full bg-muted'>
                 <div className='h-full w-1/3 animate-loading-sweep rounded-full bg-(--brand)' />
             </div>
