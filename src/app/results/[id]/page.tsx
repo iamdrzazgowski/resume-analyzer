@@ -211,7 +211,7 @@ export default function ResultPage() {
                                 {overall_score.rating}
                             </span>
                         </div>
-                        <div className='relative flex h-36 w-36 shrink-0 items-center justify-center'>
+                        <div className='relative mx-auto flex h-36 w-36 shrink-0 items-center justify-center sm:mx-0'>
                             <ScoreRing
                                 value={overall_score.percentage}
                                 color={scoreTier.ring}
