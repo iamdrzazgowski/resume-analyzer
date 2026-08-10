@@ -2,12 +2,18 @@
 
 import Chip from '@/components/ui/chip';
 import ScoreBar from '@/components/score-bar';
+import { ScoreRing } from '@/components/score-ring';
 import { Button } from '@/components/ui/button';
 import LoadingAnalyze from '@/components/ui/loading-analyze';
 import { Logo } from '@/components/logo';
 import { OverallScore } from '@/lib/schemas';
 import { useAnalysisStore } from '@/store/analysisStore';
-import { ArrowLeft, CheckCircle2, XCircle } from 'lucide-react';
+import {
+    AlertCircle,
+    ArrowLeft,
+    CheckCircle2,
+    XCircle,
+} from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
@@ -17,15 +23,21 @@ function tier(pct: number) {
         return {
             text: 'text-(--success-foreground)',
             bar: 'bg-(--success)',
+            ring: 'var(--success)',
         };
     }
     if (pct >= 50) {
         return {
             text: 'text-(--warning-foreground)',
             bar: 'bg-(--warning)',
+            ring: 'var(--warning)',
         };
     }
-    return { text: 'text-destructive', bar: 'bg-destructive' };
+    return {
+        text: 'text-destructive',
+        bar: 'bg-destructive',
+        ring: 'var(--destructive)',
+    };
 }
 
 function ratingClass(rating: OverallScore['rating']) {
@@ -43,7 +55,7 @@ function ratingClass(rating: OverallScore['rating']) {
 
 function Tag({ label }: { label: string }) {
     return (
-        <span className='inline-flex items-center rounded-full border border-border bg-muted/60 px-2.5 py-1 text-xs font-medium text-muted-foreground'>
+        <span className='inline-flex items-center rounded-md border border-border bg-muted/50 px-2 py-1 text-xs text-muted-foreground'>
             {label}
         </span>
     );
@@ -61,9 +73,25 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
     );
 }
 
-function Card({ children }: { children: React.ReactNode }) {
+function Card({
+    children,
+    accent,
+    className = '',
+}: {
+    children: React.ReactNode;
+    accent?: string;
+    className?: string;
+}) {
     return (
-        <section className='rounded-2xl border border-border bg-card p-8 shadow-sm'>
+        <section
+            className={`relative overflow-hidden rounded-2xl border border-border bg-card p-8 shadow-sm ${className}`}>
+            {accent && (
+                <span
+                    aria-hidden
+                    className='absolute inset-x-0 top-0 h-1'
+                    style={{ background: accent }}
+                />
+            )}
             {children}
         </section>
     );
@@ -85,14 +113,27 @@ export default function ResultPage() {
 
     if (!data) {
         return (
-            <div className='flex min-h-screen flex-col items-center justify-center gap-5 px-6 text-center'>
-                <p className='text-[11px] font-medium uppercase tracking-[0.14em] text-destructive'>
-                    Something went wrong
-                </p>
-                <h1 className='text-3xl font-semibold tracking-tight text-foreground'>
-                    We couldn&apos;t find that analysis
-                </h1>
-                <Button onClick={() => router.push('/')}>Back to form</Button>
+            <div className='flex min-h-screen flex-col items-center justify-center bg-muted/30 px-6'>
+                <div className='w-full max-w-sm rounded-2xl border border-border bg-card p-8 text-center shadow-sm'>
+                    <div className='mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-(--destructive-soft)'>
+                        <AlertCircle className='h-6 w-6 text-destructive' />
+                    </div>
+                    <p className='mb-2 text-[11px] font-medium uppercase tracking-[0.14em] text-destructive'>
+                        Something went wrong
+                    </p>
+                    <h1 className='text-2xl font-semibold tracking-tight text-foreground'>
+                        We couldn&apos;t find that analysis
+                    </h1>
+                    <p className='mt-2 text-sm leading-relaxed text-muted-foreground'>
+                        The analysis may have expired, or the link is
+                        invalid.
+                    </p>
+                    <Button
+                        className='mt-6 w-full'
+                        onClick={() => router.push('/')}>
+                        Back to form
+                    </Button>
+                </div>
             </div>
         );
     }
@@ -147,7 +188,7 @@ export default function ResultPage() {
             </div>
 
             <div className='mx-auto max-w-3xl space-y-6 px-6 py-12'>
-                <Card>
+                <Card className='shadow-md'>
                     <p className='mb-5 flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground'>
                         <span
                             aria-hidden
@@ -156,7 +197,7 @@ export default function ResultPage() {
                         Analysis complete
                     </p>
 
-                    <div className='flex flex-wrap items-end justify-between gap-6'>
+                    <div className='flex flex-wrap items-center justify-between gap-8'>
                         <div>
                             <h1 className='text-3xl font-semibold tracking-tight text-foreground md:text-4xl'>
                                 Your verdict
@@ -170,14 +211,20 @@ export default function ResultPage() {
                                 {overall_score.rating}
                             </span>
                         </div>
-                        <div className='flex items-baseline gap-1.5'>
-                            <span
-                                className={`text-6xl font-semibold tracking-tight md:text-7xl ${scoreTier.text}`}>
-                                {overall_score.percentage}
-                            </span>
-                            <span className='text-lg text-muted-foreground'>
-                                /100
-                            </span>
+                        <div className='relative flex h-36 w-36 shrink-0 items-center justify-center'>
+                            <ScoreRing
+                                value={overall_score.percentage}
+                                color={scoreTier.ring}
+                            />
+                            <div className='absolute inset-0 flex flex-col items-center justify-center'>
+                                <span
+                                    className={`text-4xl font-semibold tracking-tight ${scoreTier.text}`}>
+                                    {overall_score.percentage}
+                                </span>
+                                <span className='text-xs text-muted-foreground'>
+                                    / 100
+                                </span>
+                            </div>
                         </div>
                     </div>
 
@@ -496,7 +543,8 @@ export default function ResultPage() {
                     </Card>
                 )}
 
-                <Card>
+                <Card
+                    className='shadow-md'>
                     <SectionLabel>Final recommendation</SectionLabel>
                     <div>
                         <div className='flex flex-wrap items-center gap-4'>

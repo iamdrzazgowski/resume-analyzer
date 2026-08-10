@@ -12,7 +12,7 @@ export default function Chip({
 
     return (
         <span
-            className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm font-medium ${
+            className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm font-medium shadow-sm ${
                 isStrength
                     ? 'border-(--success-soft-border) bg-(--success-soft) text-(--success-foreground)'
                     : 'border-(--destructive-soft-border) bg-(--destructive-soft) text-destructive'

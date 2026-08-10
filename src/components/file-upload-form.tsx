@@ -1,6 +1,6 @@
 'use client';
 
-import { ArrowRight } from 'lucide-react';
+import { AlertCircle, ArrowRight } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { useAnalyzeMutation } from '@/hooks/useAnalyzeMutation';
 import { useFileDropzone } from '@/hooks/useFileDropzone';
@@ -106,7 +106,8 @@ export function FileUploadForm() {
                     </div>
 
                     {errors.file && (
-                        <p className='text-sm text-destructive'>
+                        <p className='flex items-center gap-1.5 text-sm text-destructive'>
+                            <AlertCircle className='h-3.5 w-3.5 shrink-0' />
                             {errors.file.message}
                         </p>
                     )}
@@ -131,16 +132,25 @@ export function FileUploadForm() {
                         })}
                     />
                     {errors.jobOffer && (
-                        <p className='text-sm text-destructive'>
+                        <p className='flex items-center gap-1.5 text-sm text-destructive'>
+                            <AlertCircle className='h-3.5 w-3.5 shrink-0' />
                             {errors.jobOffer.message}
                         </p>
                     )}
                 </div>
 
                 {mutationError && (
-                    <p className='text-sm text-destructive'>
-                        {mutationError.message}
-                    </p>
+                    <div className='flex items-start gap-3 rounded-xl border border-(--destructive-soft-border) bg-(--destructive-soft) p-4'>
+                        <AlertCircle className='mt-0.5 h-4 w-4 shrink-0 text-destructive' />
+                        <div>
+                            <p className='text-sm font-medium text-destructive'>
+                                Something went wrong
+                            </p>
+                            <p className='mt-0.5 text-sm text-destructive/80'>
+                                {mutationError.message}
+                            </p>
+                        </div>
+                    </div>
                 )}
 
                 <Button
