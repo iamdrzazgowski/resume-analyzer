@@ -179,12 +179,14 @@ export default function ResultPage() {
                     <Link href='/' aria-label='Verdict home'>
                         <Logo />
                     </Link>
-                    <button
-                        onClick={() => router.push('/')}
-                        className='flex items-center gap-1.5 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground'>
-                        <ArrowLeft className='h-3.5 w-3.5' />
-                        New analysis
-                    </button>
+                    <div className='flex items-center gap-3'>
+                        <button
+                            onClick={() => router.push('/')}
+                            className='flex items-center gap-1.5 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground'>
+                            <ArrowLeft className='h-3.5 w-3.5' />
+                            New analysis
+                        </button>
+                    </div>
                 </div>
             </div>
 

@@ -62,7 +62,7 @@ export function ScanVisual() {
 
     return (
         <div className='relative w-full max-w-110 select-none'>
-            <div className='relative overflow-hidden rounded-2xl border border-border bg-card shadow-lg shadow-slate-900/5'>
+            <div className='relative overflow-hidden rounded-2xl border border-border bg-card shadow-lg shadow-slate-900/5 dark:shadow-black/30'>
                 {phase === 'scanning' && (
                     <div
                         aria-hidden
