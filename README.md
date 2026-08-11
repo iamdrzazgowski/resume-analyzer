@@ -3,7 +3,7 @@
 Know the verdict before the recruiter does. Paste a job description, upload a
 résumé, and get a precise, evidence-based match score instead of vague advice.
 
-<!-- ![Verdict — hero](https://github.com/user-attachments/assets/c0835160-4631-46f9-9b7c-3f6e33d7a7b4) -->
+![Verdict — hero](screenshots/01-hero.png)
 
 ## What it does
 
@@ -16,15 +16,19 @@ Verdict analyzes a résumé against a specific job description and returns:
 
 Nothing is stored beyond the session — no signup required.
 
-<!-- ## Screenshots
+## Screenshots
+
+**Method**
+
+![Method section](screenshots/02-method.png)
 
 **Analyze**
 
-![Upload form](https://github.com/user-attachments/assets/86da22a3-fca9-4a26-b0f3-9c4d954b3679)
+![Upload form](screenshots/03-upload-form.png)
 
 **Verdict**
 
-![Results page](https://github.com/user-attachments/assets/6b830959-8812-443c-8e6f-17a787dfbbf4) -->
+![Results page](screenshots/04-results.png)
 
 ## Tech stack
 
