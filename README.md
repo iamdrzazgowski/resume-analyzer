@@ -16,18 +16,6 @@ Verdict analyzes a résumé against a specific job description and returns:
 
 Nothing is stored beyond the session — no signup required.
 
-## Screenshots
-
-**Method**
-
-![Method section](screenshots/02-method.png)
-
-**Analyze**
-
-![Upload form](screenshots/03-upload-form.png)
-
-**Verdict**
-
 ![Results page](screenshots/04-results.png)
 
 ## Tech stack
