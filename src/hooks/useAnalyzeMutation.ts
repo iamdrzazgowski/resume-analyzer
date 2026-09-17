@@ -1,3 +1,4 @@
+import type { AnalysisResult } from '@/lib/schemas';
 import { useAnalysisStore } from '@/store/analysisStore';
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
@@ -14,7 +15,7 @@ async function analyzeCV({ file, jobOffer }: AnalyzeVariables) {
     formData.append('resume_file', file);
     formData.append('job_description', jobOffer);
 
-    const response = await axios.post(`/api/analyze`, formData, {
+    const response = await axios.post<AnalysisResult>(`/api/analyze`, formData, {
         headers: {
             'Content-Type': 'multipart/form-data',
         },
@@ -28,6 +29,7 @@ export function useAnalyzeMutation() {
 
     const setResult = useAnalysisStore((s) => s.setResult);
     const setLoading = useAnalysisStore((s) => s.setLoading);
+    const addToHistory = useAnalysisStore((s) => s.addToHistory);
 
     const { mutate: analyzeResume, error } = useMutation({
         mutationFn: analyzeCV,
@@ -37,9 +39,13 @@ export function useAnalyzeMutation() {
             setLoading(true);
         },
 
-        onSuccess: (data) => {
+        onSuccess: (data, variables) => {
             setResult(data);
-            console.log(data);
+            addToHistory({
+                result: data,
+                fileName: variables.file.name,
+                jobTitle: data.job_analysis.job_title,
+            });
             router.push(`/results/${data.id}`);
         },
 

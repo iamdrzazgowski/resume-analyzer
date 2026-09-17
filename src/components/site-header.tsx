@@ -29,10 +29,14 @@ export function SiteHeader() {
                         className='text-sm text-muted-foreground transition-colors hover:text-foreground'>
                         What you get
                     </a>
+                    <a
+                        href='/history'
+                        className='text-sm text-muted-foreground transition-colors hover:text-foreground'>
+                        History
+                    </a>
                 </nav>
 
                 <div className='flex items-center gap-3'>
-
                     <a
                         href='#analyze'
                         className='hidden h-9 items-center rounded-lg bg-primary px-4 text-sm font-medium text-primary-foreground shadow-sm transition-colors hover:bg-primary/90 md:inline-flex'>
@@ -77,7 +81,6 @@ export function SiteHeader() {
                         className='mt-2 inline-flex h-10 items-center justify-center rounded-lg bg-primary px-4 text-sm font-medium text-primary-foreground shadow-sm transition-colors hover:bg-primary/90'>
                         Get your verdict
                     </a>
-
                 </nav>
             </div>
         </header>
