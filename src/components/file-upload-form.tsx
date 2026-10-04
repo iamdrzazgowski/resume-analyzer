@@ -1,7 +1,7 @@
 'use client';
 
 import { AlertCircle, ArrowRight } from 'lucide-react';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { useAnalyzeMutation } from '@/hooks/useAnalyzeMutation';
 import { useFileDropzone } from '@/hooks/useFileDropzone';
 import { FormData } from '@/lib/types';
@@ -17,14 +17,19 @@ import { useEffect } from 'react';
 const FIELD_LABEL = 'text-sm font-medium text-foreground';
 
 export function FileUploadForm() {
-    const { analyzeResume, error: mutationError } = useAnalyzeMutation();
+    const {
+        analyzeResume,
+        error: mutationError,
+        isPending,
+    } = useAnalyzeMutation();
     const isLoading = useAnalysisStore((s) => s.isLoading);
+    const busy = isLoading || isPending;
 
     const {
         register,
         handleSubmit,
+        control,
         setValue,
-        watch,
         setError,
         clearErrors,
         formState: { errors },
@@ -35,11 +40,16 @@ export function FileUploadForm() {
         },
     });
 
-    register('file', {
-        validate: (v) => v instanceof File || 'Resume file is required',
-    });
+    // No side effects during render: register the uncontrolled file field once.
+    useEffect(() => {
+        register('file', {
+            validate: (v) => v instanceof File || 'Resume file is required',
+        });
+    }, [register]);
 
-    const uploadedFile = watch('file');
+    // rerender-defer-reads: subscribe only to the file field, so typing the
+    // job description doesn't re-render the dropzone subtree via this value.
+    const uploadedFile = useWatch({ control, name: 'file' });
 
     const {
         isDragging,
@@ -57,26 +67,26 @@ export function FileUploadForm() {
     });
 
     useEffect(() => {
-        document.body.style.overflow = isLoading ? 'hidden' : '';
+        document.body.style.overflow = busy ? 'hidden' : '';
 
         return () => {
             document.body.style.overflow = '';
         };
-    }, [isLoading]);
+    }, [busy]);
 
     const onSubmit = (data: FormData) => {
-        if (!data.file) return;
+        if (!data.file || busy) return;
 
         analyzeResume({ file: data.file, jobOffer: data.jobOffer });
     };
 
     return (
         <>
-            {isLoading && <LoadingAnalyze />}
+            {busy && <LoadingAnalyze />}
 
             <form
                 onSubmit={handleSubmit(onSubmit)}
-                className={`w-full max-w-xl min-w-0 space-y-8 transition-opacity ${isLoading ? 'pointer-events-none opacity-40' : ''}`}>
+                className={`w-full max-w-xl min-w-0 space-y-8 transition-opacity ${busy ? 'pointer-events-none opacity-40' : ''}`}>
                 <div className='space-y-2.5'>
                     <Label className={FIELD_LABEL}>Résumé</Label>
 
@@ -155,7 +165,7 @@ export function FileUploadForm() {
 
                 <Button
                     type='submit'
-                    disabled={isLoading}
+                    disabled={busy}
                     className='group h-12 w-full text-[0.95rem] font-medium'>
                     <span className='flex items-center gap-2'>
                         Get your verdict

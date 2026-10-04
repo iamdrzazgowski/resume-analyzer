@@ -82,6 +82,9 @@ export const useAnalysisStore = create<Store>()(
         }),
         {
             name: 'analysis-store',
+            // client-localstorage-schema: version the persisted payload so a
+            // future shape change can migrate instead of crashing on stale data.
+            version: 1,
             partialize: (state) => ({
                 result: state.result,
                 history: state.history,

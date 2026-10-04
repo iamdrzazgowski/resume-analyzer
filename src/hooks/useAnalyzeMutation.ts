@@ -1,7 +1,6 @@
 import type { AnalysisResult } from '@/lib/schemas';
 import { useAnalysisStore } from '@/store/analysisStore';
 import { useMutation } from '@tanstack/react-query';
-import axios from 'axios';
 import { useRouter } from 'next/navigation';
 
 type AnalyzeVariables = {
@@ -10,18 +9,27 @@ type AnalyzeVariables = {
 };
 
 async function analyzeCV({ file, jobOffer }: AnalyzeVariables) {
+    // bundle-size: native fetch instead of axios (~30 kB saved, one less dep).
     const formData = new FormData();
 
     formData.append('resume_file', file);
     formData.append('job_description', jobOffer);
 
-    const response = await axios.post<AnalysisResult>(`/api/analyze`, formData, {
-        headers: {
-            'Content-Type': 'multipart/form-data',
-        },
+    const response = await fetch(`/api/analyze`, {
+        method: 'POST',
+        body: formData,
     });
 
-    return response.data;
+    if (!response.ok) {
+        const body = await response.json().catch(() => null);
+        const detail =
+            typeof body?.detail === 'string' && body.detail.length > 0
+                ? body.detail
+                : `Analysis failed (HTTP ${response.status})`;
+        throw new Error(detail);
+    }
+
+    return (await response.json()) as AnalysisResult;
 }
 
 export function useAnalyzeMutation() {
@@ -31,7 +39,7 @@ export function useAnalyzeMutation() {
     const setLoading = useAnalysisStore((s) => s.setLoading);
     const addToHistory = useAnalysisStore((s) => s.addToHistory);
 
-    const { mutate: analyzeResume, error } = useMutation({
+    const { mutate: analyzeResume, error, isPending } = useMutation({
         mutationFn: analyzeCV,
         mutationKey: ['analyze'],
 
@@ -54,5 +62,5 @@ export function useAnalyzeMutation() {
         },
     });
 
-    return { analyzeResume, error };
+    return { analyzeResume, error, isPending };
 }

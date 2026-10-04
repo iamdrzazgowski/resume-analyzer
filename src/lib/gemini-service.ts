@@ -1,7 +1,33 @@
 import { GoogleGenAI } from '@google/genai';
 import { analysisResultSchema, type AnalysisResult } from './schemas';
 
-const client = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+// server-no-shared-module-state: the client holds no request data, but create
+// it lazily so importing this module never does I/O or throws when the env
+// var is missing (faster cold start, clearer errors).
+let cachedClient: GoogleGenAI | null = null;
+
+function getGeminiClient(): GoogleGenAI {
+    if (!cachedClient) {
+        const apiKey = process.env.GEMINI_API_KEY;
+        if (!apiKey) {
+            throw new Error('Missing GEMINI_API_KEY');
+        }
+        cachedClient = new GoogleGenAI({ apiKey });
+    }
+    return cachedClient;
+}
+
+// Bound prompt size: a full untruncated CV can blow past token/cost limits.
+// The decisive signal (skills, titles, projects) is front-loaded; keep head + tail.
+const MAX_RESUME_CHARS = 20_000;
+const MAX_JOB_CHARS = 12_000;
+
+function truncate(text: string, max: number): string {
+    if (text.length <= max) return text;
+    const head = Math.ceil(max * 0.8);
+    const tail = max - head;
+    return `${text.slice(0, head)}\n…[truncated ${text.length - max} chars]…\n${text.slice(-tail)}`;
+}
 
 function buildPrompt(resumeText: string, jobDescription: string): string {
     return `
@@ -162,90 +188,31 @@ export async function analyzeResumeGemini(
     resumeText: string,
     jobDescription: string,
 ): Promise<AnalysisResult> {
-    const prompt = buildPrompt(resumeText, jobDescription);
+    const prompt = buildPrompt(
+        truncate(resumeText, MAX_RESUME_CHARS),
+        truncate(jobDescription, MAX_JOB_CHARS),
+    );
 
-    try {
-        const response = await client.models.generateContent({
-            model: 'gemini-2.5-flash',
-            contents: prompt,
-            config: {
-                systemInstruction:
-                    'You are a precise technical analyzer. You never ignore technologies ' +
-                    "listed in the 'Projects' section of a CV. " +
-                    'You provide 5 actionable, project-specific suggestions.',
-                temperature: 0.0,
-                maxOutputTokens: 16000,
-                responseMimeType: 'application/json',
-            },
-        });
+    const response = await getGeminiClient().models.generateContent({
+        model: 'gemini-2.5-flash',
+        contents: prompt,
+        config: {
+            systemInstruction:
+                'You are a precise technical analyzer. You never ignore technologies ' +
+                "listed in the 'Projects' section of a CV. " +
+                'You provide 5 actionable, project-specific suggestions.',
+            temperature: 0.0,
+            maxOutputTokens: 16000,
+            responseMimeType: 'application/json',
+        },
+    });
 
-        const rawText = response.text ?? '';
-        const jsonStart = rawText.indexOf('{');
-        const jsonSlice = jsonStart >= 0 ? rawText.slice(jsonStart) : rawText;
+    const rawText = response.text ?? '';
+    const jsonStart = rawText.indexOf('{');
+    const jsonSlice = jsonStart >= 0 ? rawText.slice(jsonStart) : rawText;
 
-        const parsed = JSON.parse(jsonSlice);
-        parsed.id = crypto.randomUUID();
-        parsed.score = Math.round(Number(parsed.score ?? 0));
+    const parsed = JSON.parse(jsonSlice);
+    parsed.id = crypto.randomUUID();
 
-        return analysisResultSchema.parse(parsed);
-    } catch (error) {
-        console.error('Błąd podczas analizy:', error);
-
-            return {
-                id: crypto.randomUUID(),
-
-                overall_score: {
-                    percentage: 0,
-                    rating: "Poor",
-                    summary: "Analysis failed"
-                },
-
-                candidate_profile: {
-                    seniority_level: "unknown",
-                    years_of_experience: 0,
-                    main_roles: [],
-                    main_technologies: []
-                },
-
-                job_analysis: {
-                    job_title: "",
-                    seniority_required: "",
-                    required_skills: [],
-                    preferred_skills: [],
-                    main_responsibilities: []
-                },
-
-                skills_analysis: {
-                    matched_skills: [],
-                    missing_skills: [],
-                    partial_matches: []
-                },
-
-                experience_analysis: {
-                    match_percentage: 0,
-                    relevant_experience: [],
-                    experience_gaps: []
-                },
-
-                project_analysis: [],
-
-                ats_analysis: {
-                    keyword_match_score: 0,
-                    missing_keywords: [],
-                    cv_structure_score: 0,
-                    ats_issues: []
-                },
-
-                strengths: [],
-                weaknesses: [],
-
-                cv_improvement_suggestions: [],
-
-                final_recommendation: {
-                    should_apply: false,
-                    confidence: 0,
-                    reasoning: "Analysis failed"
-                }
-            };
-    }
+    return analysisResultSchema.parse(parsed);
 }

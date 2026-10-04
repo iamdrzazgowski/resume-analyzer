@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { extractTextFromPdf } from '@/lib/pdf-parser';
 import { analyzeResumeGemini } from '@/lib/gemini-service';
+import { MAX_RESUME_BYTES } from '@/lib/validators';
 
 export const maxDuration = 60;
 export const runtime = 'nodejs';
 
-const MAX_FILE_SIZE = 5 * 1024 * 1024;
+const MAX_FILE_SIZE = MAX_RESUME_BYTES;
 const MIN_JOB_DESCRIPTION_LENGTH = 50;
 
 export async function POST(request: NextRequest) {

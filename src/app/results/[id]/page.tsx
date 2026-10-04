@@ -15,7 +15,7 @@ import {
     XCircle,
 } from 'lucide-react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
 function tier(pct: number) {
@@ -98,7 +98,16 @@ function Card({
 }
 
 export default function ResultPage() {
-    const data = useAnalysisStore((s) => s.result);
+    const params = useParams<{ id: string }>();
+    const id = params?.id;
+    const currentResult = useAnalysisStore((s) => s.result);
+    // Subscribe to history so deep links resolve once persist rehydrates.
+    const historyItem = useAnalysisStore((s) =>
+        id ? s.history.find((entry) => entry.id === id) : undefined,
+    );
+    // Deep links / refresh must work: prefer the history entry matching the
+    // URL id, fall back to the latest result (fresh navigation from the form).
+    const data = historyItem?.result ?? currentResult;
     const isLoading = useAnalysisStore((s) => s.isLoading);
     const setLoading = useAnalysisStore((s) => s.setLoading);
     const hasHydrated = useAnalysisStore((s) => s.hasHydrated);

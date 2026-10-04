@@ -18,11 +18,14 @@ function scoreClass(pct: number) {
     return 'text-destructive';
 }
 
+// js-cache-function-results: one formatter for all rows, not one per row.
+const analyzedAtFormatter = new Intl.DateTimeFormat(undefined, {
+    dateStyle: 'medium',
+    timeStyle: 'short',
+});
+
 function formatAnalyzedAt(iso: string) {
-    return new Intl.DateTimeFormat(undefined, {
-        dateStyle: 'medium',
-        timeStyle: 'short',
-    }).format(new Date(iso));
+    return analyzedAtFormatter.format(new Date(iso));
 }
 
 function HistoryLoading() {
@@ -49,15 +52,13 @@ export default function HistoryPage() {
     const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
     const [clearOpen, setClearOpen] = useState(false);
 
-    const items = useMemo(
-        () =>
-            [...history].sort((a, b) =>
-                b.createdAt.localeCompare(a.createdAt),
-            ),
-        [history],
-    );
+    // Store keeps history sorted on insert; no re-sort per render.
+    const items = history;
 
-    const pendingItem = items.find((item) => item.id === pendingDeleteId);
+    const pendingItem = useMemo(
+        () => items.find((item) => item.id === pendingDeleteId),
+        [items, pendingDeleteId],
+    );
 
     function openAnalysis(item: AnalysisHistoryItem) {
         setResult(item.result);
